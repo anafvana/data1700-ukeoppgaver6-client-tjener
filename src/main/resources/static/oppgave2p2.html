@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Oppgave 2</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="application/javascript">
+        function calculate(){
+            $("#output").text("");
+            const valuta = $("#inValuta").val();
+            const value = $("#inVerdi").val();
+            let obj = {
+                name : valuta,
+                value : value,
+            }
+
+            //The reason why the demonstration in class did not work when the fields were empty is a NullPointerException error in the server
+            //When passing an empty (null) value, the code within the @GetMapping("/calc") would fail in lines 25/26
+            //This can be handled with a try/catch in the server or by not letting empty requests be passed through the client. Or, ideally, both.
+            //To stay true to the demonstration in class, I am only adding the error-handling in the client (added lines 21-23 and 31, moved $.get inside "else")
+            if (valuta === "" || value === ""){
+                $("#output").text("You need to fill both fields.");
+            } else {
+                $.get("/calc", obj, function (valueNOK){
+                    if (isNaN(valueNOK) || valueNOK === ""){
+                        $("#output").text("The data you entered is invalid");
+                    } else {
+                        $("#output").text("Your value in NOK is " + valueNOK);
+                    }
+                })
+            }
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <label for="inValuta">Valuta:</label><input id="inValuta" type="text">
+    </div>
+    <div>
+        <label for="inVerdi">Value:</label><input id="inVerdi" type="text">
+    </div>
+    <button onclick="calculate()">Calculate in NOK!</button>
+    <div id="output"></div>
+</body>
+</html>

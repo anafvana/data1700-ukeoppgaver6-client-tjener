@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ekstraoppgave</title>
+    <style>
+        /* This section is completely optional */
+        table{
+            border: none;
+        }
+        td, th{
+            padding: 0.5rem;
+        }
+        td:first-of-type, th:first-of-type{
+            padding: 0 0.5rem 0 0;
+        }
+        td:last-of-type, th:last-of-type{
+            padding: 0 0 0 0.5rem;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="application/javascript">
+        function calculate(){
+            $("#res-lbl").text("")
+            $("#res").text("")
+            const v1 = $("#verdi1").val();
+            const v2 = $("#verdi2").val();
+            const op = $("#op").val();
+            if (isNaN(parseFloat(v1)) || isNaN(parseFloat(v2))){
+                $("#res").text("You have entered invalid values");
+            }
+            //Here I use == and not === because I want type coercion (ergo, I want v2 to be converted to a number)
+            else if (v2 == 0){
+                $("#res").text("Cannot divide by 0");
+            } else {
+                const operation = {
+                    v1 : v1,
+                    v2 : v2,
+                    op : op,
+                }
+                $.get("/operation",operation,function(result){
+                    if (!isNaN(result) && (result !== "")){
+                        $("#res-lbl").text("Result")
+                        $("#res").text(result)
+                    } else if (result === "Infinity"){
+                        $("#res").text("An error occurred.")
+                    }
+                })
+            }
+        }
+    </script>
+</head>
+<body>
+
+<table>
+    <tr>
+        <th><label for="verdi1">Verdi 1</label></th>
+        <th><label for="op">Which operation?</label></th>
+        <th><label for="verdi2">Verdi 2</label></th>
+        <th id="res-lbl"></th>
+    </tr>
+    <tr>
+        <td><input type="text" id="verdi1"></td>
+        <td style="text-align: center">
+            <select name="op" id="op">
+                <option value="plus">+</option>
+                <option value="minus">-</option>
+                <option value="times">*</option>
+                <option value="divided">/</option>
+            </select>
+        </td>
+        <td><input type="text" id="verdi2"></td>
+        <td id="res"></td>
+    </tr>
+</table>
+<button onclick="calculate()">Calculate!</button>
+
+</body>
+</html>

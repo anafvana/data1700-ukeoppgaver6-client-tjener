@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Oppgave 1</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="application/javascript">
+        function fetchTemp(){
+            const month = $("#inMonth").val();
+            /*
+        -----------     url breakdown       -----------
+            /fetchTemp -> Address where front (client) and back end (server) talk
+            ? -> separator (before: address; after: parameters)
+            inMonth -> name of the parameter
+            = -> assign value
+            {month} -> variable that dynamically adds value from input
+             */
+            const url = "/fetchTemp?inMonth="+month;
+            $.get(url, function(outTemp){
+                if (outTemp !== 0){
+                    $("#result").text("The average temperature in " + month + " was " + outTemp);
+                } else {
+                    $("#result").text("I don't recognise the month you entered.")
+                }
+            })
+            /*
+       ------------    Vanilla JavaScript version of $.get(url, function(){})    ------------
+            const httpRequest = new XMLHttpRequest()
+               httpRequest.onreadystatechange = function (outTemp) {
+                        //onreadystatechange -> when the readyState attribute changes (i.e.: when the HTTP request changes)
+                 //Insert code here
+               }
+               httpRequest.open('GET', url)
+               httpRequest.send()
+       */
+        }
+    </script>
+</head>
+<body>
+    <label for="inMonth">Enter month</label>
+    <input type="text" id="inMonth">
+    <button onclick="fetchTemp()">Click me!</button>
+    <div id="result"></div>
+</body>
+</html>
